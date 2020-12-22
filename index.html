@@ -81,7 +81,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Navigationsleiste an/ausschalten">
+    <div class="toggle" aria-label="تشغيل شريط التصفح">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -110,12 +110,12 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Startseite</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archiv</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>الأرشيفات</a>
 
   </li>
   </ul>
@@ -145,6 +145,77 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/22/%E7%AE%80%E5%8D%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AAnode%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="每天记录一点">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/22/%E7%AE%80%E5%8D%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AAnode%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-title-link" itemprop="url">简单搭建一个node服务器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">نُشر في</span>
+              
+
+              <time title="أُنشأ: 2020-12-22 19:50:19 / عُدل: 20:00:00" itemprop="dateCreated datePublished" datetime="2020-12-22T19:50:19+08:00">2020-12-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="搭建本地服务器实现api获取数据"><a href="#搭建本地服务器实现api获取数据" class="headerlink" title="搭建本地服务器实现api获取数据"></a>搭建本地服务器实现api获取数据</h3><p>前端在做项目的是有有时候因为没有接口而不好做下去, 这里使用node搭建本地服务简单实现</p>
+<ol>
+<li><p>首先需要安装express 和 express-generator<br><code>npm install express -g</code><br><code>npm install express-generator -g</code></p>
+</li>
+<li><p>使用express快速生成项目架构<br><code>express &quot;project-name&quot;</code></p>
+</li>
+<li><p>创建好后会提示先进入项目, 然后执行 <code>npm install</code><br><code>cd project-name</code><br><code>npm install</code></p>
+</li>
+<li><p>启动项目<br><code>npm start</code></p>
+</li>
+<li><p>然后就可以去浏览器查看了<br>输入127.0.0.1:3000</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/22/aa/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -167,10 +238,10 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">نُشر في</span>
               
 
-              <time title="Erstellt: 2020-12-22 11:37:49 / Geändert am: 12:23:55" itemprop="dateCreated datePublished" datetime="2020-12-22T11:37:49+08:00">2020-12-22</time>
+              <time title="أُنشأ: 2020-12-22 11:37:49 / عُدل: 12:23:55" itemprop="dateCreated datePublished" datetime="2020-12-22T11:37:49+08:00">2020-12-22</time>
             </span>
 
           
@@ -233,9 +304,9 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">نُشر في</span>
 
-              <time title="Erstellt: 2020-12-22 10:25:20" itemprop="dateCreated datePublished" datetime="2020-12-22T10:25:20+08:00">2020-12-22</time>
+              <time title="أُنشأ: 2020-12-22 10:25:20" itemprop="dateCreated datePublished" datetime="2020-12-22T10:25:20+08:00">2020-12-22</time>
             </span>
 
           
@@ -290,9 +361,9 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Veröffentlicht am</span>
+              <span class="post-meta-item-text">نُشر في</span>
 
-              <time title="Erstellt: 2020-12-22 10:24:01" itemprop="dateCreated datePublished" datetime="2020-12-22T10:24:01+08:00">2020-12-22</time>
+              <time title="أُنشأ: 2020-12-22 10:24:01" itemprop="dateCreated datePublished" datetime="2020-12-22T10:24:01+08:00">2020-12-22</time>
             </span>
 
           
@@ -374,10 +445,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Inhaltsverzeichnis
+          المحتويات
         </li>
         <li class="sidebar-nav-overview">
-          Übersicht
+          عام
         </li>
       </ul>
 
@@ -396,8 +467,8 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
-          <span class="site-state-item-name">Artikel</span>
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">المقالات</span>
         </a>
       </div>
   </nav>
@@ -430,7 +501,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Xue</span>
 </div>
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  <div class="powered-by">تطبيق الموقع <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
   </div>
 
         
