@@ -145,6 +145,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/22/call-apply-bind%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="每天记录一点">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/22/call-apply-bind%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">call apply bind的实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">نُشر في</span>
+              
+
+              <time title="أُنشأ: 2020-12-22 22:12:50 / عُدل: 22:31:17" itemprop="dateCreated datePublished" datetime="2020-12-22T22:12:50+08:00">2020-12-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>call apply bind 这三个方法都能改变函数的this</p>
+<p>首先看看怎么改变this</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line"></span><br><span class="line">foo()   <span class="comment">//这样直接执行this指向 window</span></span><br><span class="line"><span class="comment">// 如果想让this指向obj </span></span><br><span class="line"><span class="keyword">let</span> obj.foo = foo  <span class="comment">//为obj创建一个属性, 它指向foo</span></span><br><span class="line">obj.foo()   <span class="comment">// 这样执行, foo的this就指向obj</span></span><br><span class="line"><span class="keyword">delete</span> obj.foo <span class="comment">// 执行完后删除该属性</span></span><br></pre></td></tr></table></figure>
+
+
+<p>call</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.mycall = <span class="function"><span class="keyword">function</span> (<span class="params">context, ...args</span>) </span>&#123;</span><br><span class="line">  context.fn = <span class="built_in">this</span></span><br><span class="line">  context.fn(...args)</span><br><span class="line">  <span class="built_in">Reflect</span>.deleteProperty(context, fn)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>apply</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.myapply = <span class="function"><span class="keyword">function</span> (<span class="params">context, arg</span>) </span>&#123;</span><br><span class="line">  context.fn = <span class="built_in">this</span></span><br><span class="line">  context.fn(...arg)</span><br><span class="line">  <span class="built_in">Reflect</span>.deleteProperty(context, fn)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>bind</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.mybind = <span class="function"><span class="keyword">function</span> (<span class="params">context, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> self = <span class="built_in">this</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    self.apply(context, args)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/22/js%E4%B8%ADthis%E7%9A%84%E6%8C%87%E5%90%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="每天记录一点">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/22/js%E4%B8%ADthis%E7%9A%84%E6%8C%87%E5%90%91/" class="post-title-link" itemprop="url">js中this的指向</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">نُشر في</span>
+              
+
+              <time title="أُنشأ: 2020-12-22 20:54:21 / عُدل: 22:14:37" itemprop="dateCreated datePublished" datetime="2020-12-22T20:54:21+08:00">2020-12-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这篇文章时看了大神的文章后, 以自己的话写出来的</p>
+<p>如何确定this的值呢: </p>
+<ol>
+<li><p>计算 MemberExpression 的结果赋值给 ref</p>
+</li>
+<li><p>判断 ref 是不是一个 Reference 类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2.1 如果 ref 是 Reference，并且 IsPropertyReference(ref) 是 true, 那么 this 的值为 GetBase(ref)</span><br><span class="line">2.2 如果 ref 是 Reference，并且 base value 值是 Environment Record, 那么this的值为 ImplicitThisValue(ref)</span><br><span class="line">2.3 如果 ref 不是 Reference，那么 this 的值为 undefined</span><br></pre></td></tr></table></figure>
+<p>那么问题来了</p>
+</li>
+<li><p>什么是MemberExpression? 简单说就是()左边的部分</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">foo(); <span class="comment">// MemberExpression 是 foo</span></span><br><span class="line">foo()(); <span class="comment">// MemberExpression 是 foo()</span></span><br></pre></td></tr></table></figure></li>
+<li><p>什么是Reference 可以简单记为一个对象, 里面有三个属性<br>{<br>base: ,<br>propertyName: ,<br>strict: false   //这里我暂时也不太清除<br>}<br>那怎么判断一个值是不是Reference呢, 可以简单记住 foo.bar 这种对象.属性的都是Reference</p>
+</li>
+</ol>
+<p>foo.bar的 Reference: :<br>{<br>  base: foo,  // base的值可以记为.前面的<br>  propertyName: bar,  // propertyName的值就是该属性名<br>  strict: false<br>}</p>
+<p>对于IsPropertyReference, 如果</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903473872371725">参考链接</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/22/js%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -170,7 +313,7 @@
               <span class="post-meta-item-text">نُشر في</span>
               
 
-              <time title="أُنشأ: 2020-12-22 20:35:18 / عُدل: 20:38:21" itemprop="dateCreated datePublished" datetime="2020-12-22T20:35:18+08:00">2020-12-22</time>
+              <time title="أُنشأ: 2020-12-22 20:35:18 / عُدل: 20:53:17" itemprop="dateCreated datePublished" datetime="2020-12-22T20:35:18+08:00">2020-12-22</time>
             </span>
 
           
@@ -184,7 +327,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>j</p>
+          <h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><ol>
+<li>什么是作用域: 作用域是代码中定义变量的区域</li>
+<li>作用域是干什么的: 规定了如何查找变量</li>
+</ol>
+<p>js是词法作用域, 作用域在函数定义时就已经固定了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> value = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> value = <span class="number">2</span>;</span><br><span class="line">    foo();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bar(); <span class="comment">// 输出1 </span></span><br></pre></td></tr></table></figure>
+<h3 id="执行上下文"><a href="#执行上下文" class="headerlink" title="执行上下文"></a>执行上下文</h3><p>当js执行到<strong>可执行代码</strong>的时候, 就会创建一个执行上下文, 并压入执行上下文栈中, 函数执行完成就弹出栈</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn2</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">fn1()</span><br><span class="line">fn2()</span><br></pre></td></tr></table></figure>
+<p>用数组表示执行栈, 那么上面代码的执行栈的变化为</p>
+<p>Stack = []</p>
+<ol>
+<li>全局代码执行: Stack.push(globalContext)  // [globalContext]</li>
+<li>fn1执行: Stack.push(fn1Context)   // [globalContext, fn1Context]</li>
+<li>fn1完成: Stack.pop(fn1Context)  // [globalContext] </li>
+<li>fn2执行: Stack.push(fn2Context)   // [globalContext, fn2Context]</li>
+<li>fn2执行完成: Stack.pop(fn2Context) // [globalContext] </li>
+<li>全部代码执行完成  Stack.pop()    //   []</li>
+</ol>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>可执行代码: 全局代码 , 函数代码, eval代码</p>
 <p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903479429824526">引用文章</a></p>
 
       
@@ -659,7 +820,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">المقالات</span>
         </a>
       </div>
