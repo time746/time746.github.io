@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="什么是bom浏览器对象模型, 通过bom来对浏览器交互没有固定的标准, 浏览器之间共有的对象成为了标准, html5规范中规定了一些最基本的标准 windowwindow对象bom的核心是window  window是浏览器的一个实例window有两个身份:ecmascript规定的global对象访问浏览器的接口 全局作用域在全局作用域定义的变量和函数会作为window的属性但是还是有一些区别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js高级程序设计BOM">
+<meta property="og:url" content="http://example.com/2020/12/30/js%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1BOM/index.html">
+<meta property="og:site_name" content="每天记录一点">
+<meta property="og:description" content="什么是bom浏览器对象模型, 通过bom来对浏览器交互没有固定的标准, 浏览器之间共有的对象成为了标准, html5规范中规定了一些最基本的标准 windowwindow对象bom的核心是window  window是浏览器的一个实例window有两个身份:ecmascript规定的global对象访问浏览器的接口 全局作用域在全局作用域定义的变量和函数会作为window的属性但是还是有一些区别">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-12-30T00:28:55.000Z">
+<meta property="article:modified_time" content="2021-01-04T14:16:49.378Z">
+<meta property="article:author" content="Xue">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/12/30/js%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1BOM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>js高级程序设计BOM | 每天记录一点</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">每天记录一点</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/30/js%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1BOM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="每天记录一点">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          js高级程序设计BOM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-12-30 08:28:55" itemprop="dateCreated datePublished" datetime="2020-12-30T08:28:55+08:00">2020-12-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-04 22:16:49" itemprop="dateModified" datetime="2021-01-04T22:16:49+08:00">2021-01-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="什么是bom"><a href="#什么是bom" class="headerlink" title="什么是bom"></a>什么是bom</h3><p>浏览器对象模型, 通过bom来对浏览器交互<br>没有固定的标准, 浏览器之间共有的对象成为了标准, html5规范中规定了一些最基本的标准</p>
+<h3 id="window"><a href="#window" class="headerlink" title="window"></a>window</h3><p>window对象<br>bom的核心是window  window是浏览器的一个实例<br>window有两个身份:<br>ecmascript规定的global对象<br>访问浏览器的接口</p>
+<p>全局作用域<br>在全局作用域定义的变量和函数会作为window的属性<br>但是还是有一些区别</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  a = <span class="number">1</span></span><br><span class="line"><span class="built_in">global</span>.b = <span class="number">2</span></span><br><span class="line"><span class="keyword">delete</span> <span class="built_in">global</span>.a</span><br><span class="line"><span class="keyword">delete</span> <span class="built_in">global</span>.b</span><br><span class="line"><span class="comment">// console.log(a,b);</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a);  <span class="comment">// 删除不了, </span></span><br><span class="line"><span class="built_in">console</span>.log(b);  <span class="comment">//报错 提示b未定义</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a = b  <span class="comment">// 报错 提示未定义b</span></span><br><span class="line">a = <span class="built_in">global</span>.b   <span class="comment">//赋值了undefined</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>窗口关系和 框架<br>top  页面顶层框架的 windwo对象<br>parent  指向父框架 的 windwo对象<br>self  指向当前框架  的 windwo对象<br>之间使用window 和 self访问没什么区别, self只是为了和top parent对应<br>top parent self  这三个对象都是window的属性</p>
+<p>窗口位置<br>window.screenTop<br>window.screenLeft   浏览器窗口距离电脑屏幕的距离</p>
+<p>window.moveTo<br>window.moveBy   //移动浏览器窗口, 这两个方法可能不起效果, 且对框架无效</p>
+<p>window.resizeTo<br>window.resizeBy  //接收新窗口与原来窗口的高度差   可能被禁用</p>
+<p>窗口大小<br>window.innerWindth<br>window.innerHeight  返回视口大小</p>
+<p>获取视口大小还可以:<br>document.documentElement.clientWidth</p>
+<p>window.outerrWindth<br>window.outerHeight    返回浏览器窗口大小</p>
+<p>打开窗口<br>window.open(“<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903577220349959#heading-9&quot;">https://juejin.cn/post/6844903577220349959#heading-9&quot;</a>, “top”, “height=400, width=200”)<br>参数: url, 已有框架,如果没有就根据第三个参数创建新标签页或打开新窗口(根据浏览器的实现)</p>
+<p>window.open() 会返回一个指向新窗口的引用<br>let n = window.open(…)<br>使用n.close关闭 窗口<br>可能可以使用moveTo这些方法<br>新窗口的属性;<br>opener  保存打开这个页面的窗口的window对象</p>
+<p>window在页面没加载完成不会执行, 防止各种广告弹窗口 ,只能用户操作打开</p>
+<p>间歇调用和超时调用<br>setTimeout<br>setInterval</p>
+<p>一般不使用setInterval</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> num = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> timer = <span class="built_in">setInterval</span>(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  num++</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> (num == <span class="number">5</span>) &#123;</span><br><span class="line">    <span class="built_in">clearInterval</span>(timer)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,<span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用settimeout模拟setinterval</span></span><br><span class="line"><span class="keyword">let</span> num = <span class="number">0</span></span><br><span class="line"><span class="keyword">let</span> max = <span class="number">5</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myinterval</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  num++</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> (num &lt; max) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(myinterval, <span class="number">1000</span>)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">myinterval()</span><br></pre></td></tr></table></figure>
+
+<p>系统对话框<br>alert()<br>prompt()  返回输入结果<br>confirm() 返回布尔值<br>显示对话框的时候 代码停止执行</p>
+<p>find()<br>print() 显示打印对话框, 这两个对话框的显示是异步的</p>
+<h3 id="location对象"><a href="#location对象" class="headerlink" title="location对象"></a>location对象</h3><p>它既是window的属性 也是document的属性</p>
+<p>location对象的属性:<br>hash<br>href  … 用来获取url的信息 , 也可以赋值来改变url</p>
+<p>方法<br>location.assign(“<a target="_blank" rel="noopener" href="https://www.baidu.com&quot;/">https://www.baidu.com&quot;</a>)  当前页面打开url,<br>也可以window.location = url<br>或者location.href = url  可以返回上个url</p>
+<p>location.replace    不能返回</p>
+<p>location.reload()  刷新页面 可以使用缓存<br>location.reload(true)  从服务器加载, 不适用缓存  </p>
+<h3 id="navigator对象"><a href="#navigator对象" class="headerlink" title="navigator对象"></a>navigator对象</h3><p>用来获取浏览器的一些信息, 如版本, 提供商, 浏览器版本, 浏览器插件信息</p>
+<p>属性<br>plugins  是一个数组  保存所有插件<br>userAgent  浏览器的用户代理 字符串</p>
+<h3 id="screen对象"><a href="#screen对象" class="headerlink" title="screen对象"></a>screen对象</h3><p>获取浏览器在显示器中的信息<br>screen.height   类似window.innerHeight…</p>
+<h3 id="history对象"><a href="#history对象" class="headerlink" title="history对象"></a>history对象</h3><p>保存浏览历史记录</p>
+<p>方法<br>go<br>back<br>forward  </p>
+<h2 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h2><p>文档节点 是每个文档的根节点<br>文档节点有 documentType节点和html节点<br>html文档元素, 其他所有元素都包含在文档元素中</p>
+<p>node类型<br>Node.ATTRIBUTE_NODE 这个值为2  Node中保存着一些常量</p>
+<p>nodetype<br>1  元素<br>2  属性<br>3  文本…</p>
+<p>nodeName nodeValue<br>元素节点的nodeValue为null</p>
+<p>节点关系<br>每个节点都有一个childNodes属性, 这个属性是一个Nodelist对象<br>nodeList对象是有生命的, 动态的</p>
+<p>每个节点都有parentNode属性</p>
+<ul>
+<li>document类型<br>document.domain<br>跨域<br>通过设置document.domain, 将不同<br>比如一个页面<a target="_blank" rel="noopener" href="http://www.aa.com/">www.aa.com</a>  , 这个页面有一个框架, 加载与p2p.aa.com  那么由于跨域(协议 域名 端口 )有一个不同, 所以不能相互访问js对象 . 但如果都将document.domain设置为 aa.com  那么就可以了</li>
+</ul>
+<p>NodeList    所有节点集合<br>HtmlCollection  元素节点集合</p>
+<p>dom一致性检测</p>
+<p>document.implementation.hasFeature()</p>
+<p>文档写入<br>domcument.write()<br>writeln()  //行尾添加 换行符\n<br>open()<br>close<br>可以用这个方法动态添加js标签  不过要注意:  &lt;/script&gt;</p>
+<ul>
+<li>element类型  nodetype: 1<br>子节点可能是 </li>
+</ul>
+<p>自定义属性不能通过属性访问, 需要使用getAttribute访问<br>如果自定义属性前面添加了 data-  那么可以用dataset属性访问 </p>
+<p>div.aaa = “bbb”  //设置后不能访问<br>div.setAttribute(“aaa”,”bbb”)  // 可以访问</p>
+<p>滚动页面</p>
+<p>ipt.scrollIntoView(true)</p>
+<p>window.scroll()，window.scrollBy()，window.scrollTo()</p>
+<p>判断是否父子节点  p319<br>contains<br>let res = document.documentElement.compareDocumentPosition(document.body) 返回的是掩码<br>要进行逻辑与运算再转换为布尔值<br>!!(res&amp;16)</p>
+<p>let res = document.documentElement.contains(document.body)</p>
+<p>滚动<br>滚动窗口到文档指定位置:</p>
+<ol>
+<li>window.scroll(x, y)  不需要单位</li>
+<li>普通元素滚动加个定位, 设置style.left</li>
+</ol>
+<p>页面被卷去的头部: 使用window.pageYOffset  window.pageXOffset</p>
+<p>elementnode.attributes 获得属性, 有可能会有没有值的属性, 可以用elementnode.attributes[1].specified</p>
+<p>window.innerWidth<br>document.documentElement.clientWidth</p>
+<p>dom遍历器<br>let iterator = document.createNodeIterator(box,NodeFilter.SHOW_ELEMENT,null,false)</p>
+<p>let range1 = document.createRange()<br>range1.selectNodeContents(box)<br>console.log(range1); // endoffset就是子节点的个数</p>
+<p>let fragment = range2.cloneContents<br>box.appendChild(fragment)  克隆选中的选区, //如果选取是文本节点的某个点, 一定要是两个文本再不同的标签</p>
+<h2 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h2><p>load事件<br>绑定给window: window.onload  // 或者使用winodw.addEventListener(‘load’,fn)<br>绑定给body: document.body.onload = fn  //不能使用addEventListener load</p>
+<p>scroll事件也是, 绑定给body需要使用onload 不能使用addEventListener, 绑定给window就都行</p>
+<p>onunload  浏览器刷新关闭时触发 写法同上<br>resize同上</p>
+<p>焦点事件<br>blur   focus 不冒泡   focusin  focusout  冒泡<br>mouseenter  mouseleave  不冒泡</p>
+<p>1.不是所有事件都支持冒泡和捕获，这样的话就不能进行事件代理了。<br>2.不是所有标签都能获得获得焦点 和失去焦点。<br>整理如下：</p>
+<p> 1.focus blur 不支持冒泡 支持捕获  focusin focusout 支持捕获。<br> 2.下面这些都是可以获得焦点的<br>  a.  window：当页面窗口从隐藏变成前置可见时，focus 事件就会触发<br>  b.   表单元素(form controllers)：input/option/textarea/button<br>  c. 链接元素(links)：a标签、area标签（必须要带 href 属性，包括 href 属性为空）<br>  d.  设置了 tabindex 属性（tabindex 值非-1）的元素<br>  e. 设置了contenteditable = “true”属性的元素。<br>3  要想让这些不能获得焦点的标签元素如 div 获得焦点 ，可使用 2.e  2.d</p>
+<p>鼠标和滚轮事件<br>mouseenter  mouseleave  不冒泡</p>
+<p>mouseout  鼠标离开元素(进入子元素也算离开)触发       mouseleave  进入子元素不算离开<br>mouseover 进入子元素也算进入                  mouseenter   如果子元素大于父元素, 进入子元素也算, 因为父元素会包裹子元素  </p>
+<p>mousemove  鼠标在元素内移动 (进入子元素也算)</p>
+<p>mousedowm  mouseup  这两个事件都执行  click事件才会执行</p>
+<p>mousewheel  监听滚轮滚动</p>
+<p>事件属性<br>console.log(window.pageYOffset);<br>console.log(document.documentElement.scrollTop);  这两个值相等, 获取页面被卷去的头部  混杂模式在document.body中(标准模式为0)</p>
+<p>document.documentElement.scrollTo(0,100)<br>window.scrollTo(0,100)   这两个移动是一样的</p>
+<p>滚动事件<br>window.onscroll  和 document.body.onscroll<br>监听事件 写在 document.body中<br>属性 和方法写在document.documentElement中<br>window中都有</p>
+<p>mouseover  和 mouseout 事件对象有一个相关元素的属性  relatedTarget<br>mouseover 的 relatedTarget 指向失去光标的元素<br> mouseout 的 relatedTarget 指向获得光标的元素</p>
+<p>鼠标按钮<br>鼠标点击和 使用tab键使button获得焦点后按enter, 也可以触发点击事件<br>事件对象的button属性可以知道点击的是那个按钮, 不过需要监听 mouseup或mousedown事件  click事件不行,click事件右击无效<br>detail属性保存的是在同一个位置点击的次数</p>
+<p>所有元素如果父元素没有定位, 那么offsetParent就是body,  body的offsetParent是null,offsetLeft是0<br>事件属性 offsetX  offsetY 获取点击的位置相对于元素的偏移, 也可以通过 e.pageX - this.offsetLeft计算<br>但是如果有多层定位, 可以封装函数<br>function (ele,offsetLeft/offsetRight) {<br>  let actualLeft = o<br>  while (ele) {<br>    actualLeft += ele.offsetLeft<br>    ele = ele.offsetParent<br>  }<br>  return actualLeft<br>}</p>
+<p>键盘事件<br>事件对象<br>console.log(e.keyCode);<br>e.key</p>
+<p>keydown keypress 按着不放会一直触发<br>keyup  松开触发<br>顺序  keydown  keypress  keyup<br>keydown keyup 识别功能键ctrl shift等  但是不识别大小写  以大写为准<br>keypress识别大小写和 识别数字键盘上的数字和字母按钮上的数字, 但是不识别功能键</p>
+<p>e.currentTarget 和 this相等,  e.target 指向点击的元素  但是console.log(e) 查看currentTarget属性为null</p>
+<p>html5事件<br>oncontextmenu  在事件冒泡和捕获完成后显示菜单, 所有在document.body中阻止默认事件<br>onbeforeunload  页面离开时触发, 需要页面的内容有更改, 比如input标签内容修改了<br>  window.onbeforeunload = function (e) {<br>      let message = “afesfsef”;<br>      e.returnValue = message<br>      return message<br>    }</p>
+<p>DOMContentLoaded  这个事件要么绑定给document 要么给window</p>
+<p>document.onreadystatechange  这个也是 要么给document 要么给 window 支持这个事件的元素有1个readState属性, 值为.loaded interactive  complete….   interactive相当于domcontentloaded</p>
+<p>onpageshow  onpagehide  虽然事件的目标是document 但是 只能绑定给window<br>对于有往返缓存的浏览器 如firefox 因为有缓存 所以返回页面不触发onload 所有要用onpageshow<br>onpagehide在 onunload之前触发</p>
+<p>onhashchange  只能绑定给window  当hash值发生变化时执行</p>
+<p>原因：首先body被html包裹，而html被document包裹，而document被window包裹，总结上面的顺序，为：body=》html=》document=》window。<br>之所以很多事件都绑定给body 是因为整个视口就是body</p>
+<p>设备事件</p>
+<p>触摸与手势事件  绑定给body 或者document<br>touchstart<br>touchmove<br>touchend<br>事件对象<br>e.touches  在当前元素文档上的手指<br>e.targetTouches  在当前元素上的手指<br>e.changeTouches  相对于上次, 改变的手指  对于touchend 要使用这个</p>
+<p>手势  gesture  绑定给document  body没试<br>gesturestart<br>gesturechange<br>gestureend<br>事件对象<br>e.rotation<br>e.scale</p>
+<p>内存和性能<br>事件委托</p>
+<p>模拟事件<br>模拟鼠标事件</p>
+<ol>
+<li><p>btn.click()</p>
+</li>
+<li><p>let event = document.createEvent(‘MouseEvents’)<br> event.initEvent(‘click’,true,true)<br> btn.dispatchEvent(event)<br> 前提是btn要监听click事件 , 这个方法现在弃用了</p>
+</li>
+<li><p>var ev = new MouseEvent(‘click’, {</p>
+<pre><code>     cancelable: true,
+     bubble: true,
+     view: window
+ &#125;);
+ btn.dispatchEvent(ev);</code></pre>
+</li>
+</ol>
+<p>模拟键盘事件  前提是ipt要监听keyup 事件, 想要修改input的值, 需要使用e接收, 然后用this.value = e…</p>
+<ol>
+<li><p>let event2 = document.createEvent(“KeyboardEvent”)<br> event2.initKeyboardEvent(‘keyup’,true,true,document.defaultView,”a”,0,’Shift’,2)<br>ipt.dispatchEvent(event2)<br>不推荐使用</p>
+</li>
+<li><p>var ev = new KeyboardEvent(‘keyup’, {</p>
+<pre><code>     keyCode: 65
+ &#125;);
+ document.dispatchEvent(ev);</code></pre>
+</li>
+</ol>
+<p>document.defaultView  在浏览器中，该属性返回当前 document 对象所关联的 window 对象，如果没有，会返回 null。</p>
+<p>自定义事件</p>
+<ol>
+<li>div.addEventListener(‘myevent’, function (e) {<br>console.log(e)<br>})</li>
+</ol>
+<p>let myevent = document.createEvent(“CustomEvent”)<br>myevent.initCustomEvent(‘myevent’,true,false,”hello world”)<br>这个已经不推荐使用了</p>
+<ol start="2">
+<li>let myevent = new CustomEvent(‘myevent’, {<br>bubbles: ‘true’,<br>cancelable: “true”,<br>detail: “this is data”<br>})<br>btn.dispatchEvent(myevent)</li>
+<li>var ev = new Event(‘test’, {<br> bubbles: ‘true’,<br> cancelable: ‘true’<br>});<br>btn.dispatchEvent(ev);  customevent比这个多了detail 可以传参</li>
+</ol>
+<p>可以直接调用的方法<br>div.click()    //会触发div的click事件<br>input.blur()<br>input.focus()<br>form.submit()  //不会触发submit事件<br>form.reset()<br>textarea.select()  //选择文本框中所有的文本   会触发绑定的select事件<br>ipt.setSelectionRange(0,5)  //选择文本框中 的部分文本</p>
+<h2 id="表单脚本"><a href="#表单脚本" class="headerlink" title="表单脚本"></a>表单脚本</h2><p>提交表单的按钮<br>  <input type="image" src="aa.jpg">  图片按钮<br>还有type为submit的input   和 button</p>
+<p>或者js调用:  documents.forms[‘formName’].submit()</p>
+<p>屏蔽input的输入, 可以设置readonly 也可以添加keypress事件, 如果是非法数据, 就阻止默认行为</p>
+<p>查看标签是否含有某个属性<br>isSupport = Reflect.has(document.createElement(‘input’),’required’)</p>
+<input type="number" value="" step="3" min="0" max="100">
+输入的值需要是3的倍数
+
+
+<p>检测表单字段是否有效: 使用checkVaildity方法<br>document.forms[‘myform’].elements[‘input1’].checkVaildity()  返回true /false</p>
+<p>也可以对表单验证 form.checkVaildity()<br>想要知道为什么无效 使用 vaildity 属性…<br>input.vaildity  值都是true 或 false  表示不同的错误</p>
+<p>禁用验证: 表单使用novalidate 属性 , 表单字段没有相应属性</p>
+<p>对form禁用验证: </p>
+<form novalidate> </form>
+
+<input type="submit" formnovalidate>
+或者用js: 设置提交按钮的formnovalidate属性为true // 都需要提交按钮
+
+
+<select name="myselect" id="" multiple>
+    <option value="one">1</option>
+    <option value="two">2</option>
+    <option>3</option>
+</select>
+多选时, value的值是第一个选中表单元素的值
+当没有value属性时, 取得的value是显示的文本3
+
+
+<p>富文本<br>网页中编辑富文本内容, </p>
+<p>canvas<br>获取canvas成url</p>
+<p>绘制canvas</p>
+<h2 id="html5脚本编程"><a href="#html5脚本编程" class="headerlink" title="html5脚本编程"></a>html5脚本编程</h2><p>跨文档消息传递</p>
+<ol>
+<li>获取iframe框架的window</li>
+<li>使用   wiframe框架的window   的postMessage方法<br>前提是 框架中用window.onmessage监听了事件,<br>ttt.contentWindow.postMessage(“aa”,”*任何域文档 或者 目标窗口的url”)</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/29/%E7%96%91%E9%97%AE/" rel="prev" title="疑问">
+      <i class="fa fa-chevron-left"></i> 疑问
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/30/js%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E5%85%B6%E4%BB%96%E7%AB%A0%E8%8A%82/" rel="next" title="js高级程序设计其他章节">
+      js高级程序设计其他章节 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFbom"><span class="nav-number">1.</span> <span class="nav-text">什么是bom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#window"><span class="nav-number">2.</span> <span class="nav-text">window</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#location%E5%AF%B9%E8%B1%A1"><span class="nav-number">3.</span> <span class="nav-text">location对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#navigator%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.</span> <span class="nav-text">navigator对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#screen%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.</span> <span class="nav-text">screen对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#history%E5%AF%B9%E8%B1%A1"><span class="nav-number">6.</span> <span class="nav-text">history对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM"><span class="nav-number"></span> <span class="nav-text">DOM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6"><span class="nav-number"></span> <span class="nav-text">事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A8%E5%8D%95%E8%84%9A%E6%9C%AC"><span class="nav-number"></span> <span class="nav-text">表单脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#html5%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B"><span class="nav-number"></span> <span class="nav-text">html5脚本编程</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Xue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xue</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
